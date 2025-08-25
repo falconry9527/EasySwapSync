@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/spf13/viper"
@@ -91,6 +92,7 @@ func UnmarshalCmdConfig() (*Config, error) {
 	if err := viper.ReadInConfig(); err != nil {
 		return nil, err
 	}
+	fmt.Println("Unmarshal config")
 
 	var c Config
 
