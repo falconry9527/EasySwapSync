@@ -53,10 +53,10 @@ func (f *Filter) Remove(element string) {
 // Contains checks whether the Filter contains a specific element.
 // The element is transformed to lowercase before checking.
 func (f *Filter) Contains(element string) bool {
-	//f.lock.RLock()         // Acquire the lock for reading
-	//defer f.lock.RUnlock() // Defer unlocking until function return
-	//_, exists := f.set[strings.ToLower(element)]
-	return true
+	f.lock.RLock()         // Acquire the lock for reading
+	defer f.lock.RUnlock() // Defer unlocking until function return
+	_, exists := f.set[strings.ToLower(element)]
+	return exists
 }
 
 func (f *Filter) PreloadCollections() error {
@@ -78,6 +78,7 @@ func (f *Filter) PreloadCollections() error {
 	for _, address := range addresses {
 		f.Add(address)
 	}
-
+	// 这里先手动加上
+	f.Add("0x5560e1c2E0260c2274e400d80C30CDC4B92dC8ac")
 	return nil
 }

@@ -20,3 +20,23 @@ And set contract address in config file.
 Run command below
 ```shell
 go run main.go daemon
+```
+
+
+# 运行流程
+```
+1. 执行 init  函数
+daemon init  
+ (rootCmd.AddCommand(DaemonCmd) : 把子命令DaemonCmd添加到rootCmd )
+root init
+  
+
+2. 执行main 函数
+main main
+3. 执行 Execute （先执行root，再执行DaemonCmd）
+root Execute
+root initConfig
+Using config file: ./config/config_import.toml
+DaemonCmd Run
+
+```

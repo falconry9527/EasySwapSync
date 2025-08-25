@@ -25,19 +25,16 @@ var rootCmd = &cobra.Command{
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
+	fmt.Println("root Execute")
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	fmt.Println("root Execute")
-
-	fmt.Println("cfgFile=", cfgFile)
 }
 
 func init() {
 	fmt.Println("root init")
-
-	// 设置initConfig在调用rootCmd的Execute()方法时运行
+	// Cobra 库内部维护了一个函数切片（slice），当执行 Execute 时候执行初始化函数
 	cobra.OnInitialize(initConfig)
 	flags := rootCmd.PersistentFlags()
 	flags.StringVarP(&cfgFile, "config", "c", "./config/config_import.toml", "config file (default is $HOME/.config_import.toml)")

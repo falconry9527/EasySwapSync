@@ -23,6 +23,9 @@ var DaemonCmd = &cobra.Command{
 	Short: "sync easy swap order info.",
 	Long:  "sync easy swap order info.",
 	Run: func(cmd *cobra.Command, args []string) {
+
+		fmt.Println("DaemonCmd Run")
+
 		wg := &sync.WaitGroup{}
 		wg.Add(1)
 		ctx := context.Background()
@@ -30,7 +33,6 @@ var DaemonCmd = &cobra.Command{
 
 		// rpc退出信号通知chan
 		onSyncExit := make(chan error, 1)
-		fmt.Println("daemon DaemonCmd")
 
 		go func() {
 			defer wg.Done()
