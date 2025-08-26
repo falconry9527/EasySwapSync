@@ -42,9 +42,8 @@ const (
 	FixForItem       = 1
 	List             = 0
 	Bid              = 1
-
-	HexPrefix   = "0x"
-	ZeroAddress = "0x0000000000000000000000000000000000000000"
+	HexPrefix        = "0x"
+	ZeroAddress      = "0x0000000000000000000000000000000000000000"
 )
 
 type Order struct {
@@ -98,7 +97,9 @@ func New(ctx context.Context, cfg *config.Config, db *gorm.DB, xkv *xkv.Store, c
 }
 
 func (s *Service) Start() {
+	// 同步数据，数据存入数据库
 	threading.GoSafe(s.SyncOrderBookEventLoop)
+	// 计算最低价的服务
 	threading.GoSafe(s.UpKeepingCollectionFloorChangeLoop)
 }
 
@@ -107,11 +108,10 @@ func (s *Service) SyncOrderBookEventLoop() {
 	if err := s.db.WithContext(s.ctx).Table(base.IndexedStatusTableName()).
 		Where("chain_id = ? and index_type = ?", s.chainId, EventIndexType).
 		First(&indexedStatus).Error; err != nil {
-		xzap.WithContext(s.ctx).Error("failed on get listing index status",
-			zap.Error(err))
+		xzap.WithContext(s.ctx).Error("failed on get listing index status", zap.Error(err))
 		return
 	}
-
+	// 查找 ob_indexed_status.LastIndexedBlock
 	lastSyncBlock := uint64(indexedStatus.LastIndexedBlock)
 	for {
 		select {
@@ -144,7 +144,7 @@ func (s *Service) SyncOrderBookEventLoop() {
 			ToBlock:   new(big.Int).SetUint64(endBlock),
 			Addresses: []string{s.cfg.ContractCfg.DexAddress},
 		}
-
+		// 真正获取 日志的方法
 		logs, err := s.chainClient.FilterLogs(s.ctx, query) //同时获取多个（SyncBlockPeriod）区块的日志
 		if err != nil {
 			xzap.WithContext(s.ctx).Error("failed on get log", zap.Error(err))
@@ -169,8 +169,7 @@ func (s *Service) SyncOrderBookEventLoop() {
 		if err := s.db.WithContext(s.ctx).Table(base.IndexedStatusTableName()).
 			Where("chain_id = ? and index_type = ?", s.chainId, EventIndexType).
 			Update("last_indexed_block", lastSyncBlock).Error; err != nil {
-			xzap.WithContext(s.ctx).Error("failed on update orderbook event sync block number",
-				zap.Error(err))
+			xzap.WithContext(s.ctx).Error("failed on update orderbook event sync block number", zap.Error(err))
 			return
 		}
 
@@ -534,8 +533,7 @@ func (s *Service) UpKeepingCollectionFloorChangeLoop() {
 		Select("last_indexed_time").
 		Where("chain_id = ? and index_type = ?", s.chainId, comm.CollectionFloorChangeIndexType).
 		First(&indexedStatus).Error; err != nil {
-		xzap.WithContext(s.ctx).Error("failed on get collection floor change index status",
-			zap.Error(err))
+		xzap.WithContext(s.ctx).Error("failed on get collection floor change index status", zap.Error(err))
 		return
 	}
 
@@ -546,21 +544,18 @@ func (s *Service) UpKeepingCollectionFloorChangeLoop() {
 			return
 		case <-timer.C:
 			if err := s.deleteExpireCollectionFloorChangeFromDatabase(); err != nil {
-				xzap.WithContext(s.ctx).Error("failed on delete expire collection floor change",
-					zap.Error(err))
+				xzap.WithContext(s.ctx).Error("failed on delete expire collection floor change", zap.Error(err))
 			}
 		case <-updateFloorPriceTimer.C:
 			if s.cfg.ProjectCfg.Name == gdb.OrderBookDexProject {
 				floorPrices, err := s.QueryCollectionsFloorPrice()
 				if err != nil {
-					xzap.WithContext(s.ctx).Error("failed on query collections floor change",
-						zap.Error(err))
+					xzap.WithContext(s.ctx).Error("failed on query collections floor change", zap.Error(err))
 					continue
 				}
 
 				if err := s.persistCollectionsFloorChange(floorPrices); err != nil {
-					xzap.WithContext(s.ctx).Error("failed on persist collections floor price",
-						zap.Error(err))
+					xzap.WithContext(s.ctx).Error("failed on persist collections floor price", zap.Error(err))
 					continue
 				}
 			}

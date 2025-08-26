@@ -59,7 +59,8 @@ func New(ctx context.Context, cfg *config.Config) (*Service, error) {
 	fmt.Println("chainClient url:" + cfg.AnkrCfg.HttpsUrl + cfg.AnkrCfg.ApiKey)
 	// 只能抓取 允许链id 的数据
 	// chain.EthChainID, chain.OptimismChainID, chain.SepoliaChainID
-	// chainclient.New 只允许创建 上面 chainId 的 客户端
+	// chainclient.New 只允许创建 上面 chainId 的客户端
+	// 创建eth链的客户端，后面具体请求回用到 chainClient
 	chainClient, err = chainclient.New(int(cfg.ChainCfg.ID), cfg.AnkrCfg.HttpsUrl+cfg.AnkrCfg.ApiKey)
 	fmt.Printf("-------------")
 
@@ -94,7 +95,7 @@ func (s *Service) Start() error {
 	if err := s.collectionFilter.PreloadCollections(); err != nil {
 		return errors.Wrap(err, "failed on preload collection to filter")
 	}
-	// 正式的数据同步服务
+	// chainclient 同步数据，并把数据存入 数据，发送到 orderManager
 	s.orderbookIndexer.Start()
 	s.orderManager.Start()
 	return nil
