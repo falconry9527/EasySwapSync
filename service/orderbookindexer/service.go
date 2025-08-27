@@ -99,7 +99,7 @@ func New(ctx context.Context, cfg *config.Config, db *gorm.DB, xkv *xkv.Store, c
 func (s *Service) Start() {
 	// 同步数据，数据存入数据库
 	threading.GoSafe(s.SyncOrderBookEventLoop)
-	// 计算最低价的服务
+	// 计算地板价的服务
 	threading.GoSafe(s.UpKeepingCollectionFloorChangeLoop)
 }
 
@@ -157,10 +157,13 @@ func (s *Service) SyncOrderBookEventLoop() {
 			switch ethLog.Topics[0].String() {
 			case LogMakeTopic:
 				s.handleMakeEvent(ethLog)
+				// 订单生成
 			case LogCancelTopic:
 				s.handleCancelEvent(ethLog)
+				// 订单取消
 			case LogMatchTopic:
 				s.handleMatchEvent(ethLog)
+				// 订单成交
 			default:
 			}
 		}

@@ -95,8 +95,9 @@ func (s *Service) Start() error {
 	if err := s.collectionFilter.PreloadCollections(); err != nil {
 		return errors.Wrap(err, "failed on preload collection to filter")
 	}
-	// chainclient 同步数据，并把数据存入 数据，发送到 orderManager
+	// chainclient 同步数据，并把数据存入数据库，复杂业务发送到 orderManager（以redis queue 的形式）
 	s.orderbookIndexer.Start()
+	// 进行一些业务加工： 地板价格
 	s.orderManager.Start()
 	return nil
 }
