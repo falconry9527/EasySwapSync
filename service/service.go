@@ -15,11 +15,11 @@ import (
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"gorm.io/gorm"
 
-	"github.com/falconry9527/EasySwapSync/service/orderbookindexer"
+	"EasySwapSync/service/orderbookindexer"
 
-	"github.com/falconry9527/EasySwapSync/model"
-	"github.com/falconry9527/EasySwapSync/service/collectionfilter"
-	"github.com/falconry9527/EasySwapSync/service/config"
+	"EasySwapSync/model"
+	"EasySwapSync/service/collectionfilter"
+	"EasySwapSync/service/config"
 )
 
 type Service struct {

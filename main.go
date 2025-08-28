@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/falconry9527/EasySwapSync/cmd"
+	"EasySwapSync/cmd"
 )
 
 func main() {

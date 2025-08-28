@@ -14,8 +14,8 @@ import (
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 
-	"github.com/falconry9527/EasySwapSync/service"
-	"github.com/falconry9527/EasySwapSync/service/config"
+	"EasySwapSync/service"
+	"EasySwapSync/service/config"
 )
 
 var DaemonCmd = &cobra.Command{

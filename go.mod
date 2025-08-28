@@ -1,4 +1,4 @@
-module github.com/falconry9527/EasySwapSync
+module EasySwapSync
 
 go 1.21
 

@@ -26,8 +26,8 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
-	"github.com/falconry9527/EasySwapSync/service/comm"
-	"github.com/falconry9527/EasySwapSync/service/config"
+	"EasySwapSync/service/comm"
+	"EasySwapSync/service/config"
 )
 
 const (

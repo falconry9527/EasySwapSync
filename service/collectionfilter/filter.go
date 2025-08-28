@@ -10,7 +10,7 @@ import (
 
 	"gorm.io/gorm"
 
-	"github.com/falconry9527/EasySwapSync/service/comm"
+	"EasySwapSync/service/comm"
 )
 
 // Filter is a thread-safe structure to store a set of strings.

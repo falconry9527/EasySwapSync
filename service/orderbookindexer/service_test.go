@@ -12,7 +12,7 @@ import (
 	"github.com/falconry9527/EasySwapBase/chain/types"
 	"github.com/falconry9527/EasySwapBase/stores/gdb"
 
-	"github.com/falconry9527/EasySwapSync/model"
+	"EasySwapSync/model"
 )
 
 func TestSyncEvent(t *testing.T) {
