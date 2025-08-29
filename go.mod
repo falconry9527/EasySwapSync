@@ -2,7 +2,7 @@ module EasySwapSync
 
 go 1.21
 
-//replace github.com/falconry9527/EasySwapBase => ../EasySwapBase
+replace github.com/falconry9527/EasySwapBase => ../EasySwapBase
 
 require (
 	github.com/ethereum/go-ethereum v1.12.0
